@@ -1,21 +1,32 @@
-# Oracle JDK v1.8.0_65
+# Oracle JDK v1.8.0_66
 # docker run --rm pottava/java:8 java -version
 # docker run --rm pottava/java:8 env
 
 FROM alpine:3.3
 
-ENV JAVA_VERSION_MAJOR=8 JAVA_VERSION_MINOR=65 JAVA_VERSION_BUILD=17 JAVA_PACKAGE=jdk JAVA_HOME=/opt/jdk
-ENV PATH=${PATH}:${JAVA_HOME}/bin
+ENV JAVA_VERSION_MAJOR=8 \
+    JAVA_VERSION_MINOR=66 \
+    JAVA_VERSION_BUILD=17 \
+    JAVA_CHECKSUM=7e95ad5fa1c75bc65d54aaac9e9986063d0a442f39a53f77909b044cef63dc0a \
+    JAVA_PACKAGE=jdk \
+    JAVA_HOME=/opt/jdk \
+    PATH=${PATH}:/opt/jdk/bin
 
-RUN apk --no-cache add --virtual build-dependencies curl ca-certificates tar \
-      && curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk \
+RUN set -ex \
+      && apk --no-cache add --virtual build-dependencies curl ca-certificates tar \
+      && curl --location --silent https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk \
       && apk --update add --allow-untrusted /tmp/glibc-2.21-r2.apk \
       && mkdir /opt \
-      && curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" \
+      && cd /opt \
+      && curl -O --location --silent --insecure --show-error --junk-session-cookies \
+          --header "Cookie: oraclelicense=accept-securebackup-cookie" \
           http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
-          | tar -xzf - -C /opt \
+      && echo ${JAVA_CHECKSUM}'  '${JAVA_PACKAGE}'-'${JAVA_VERSION_MAJOR}'u'${JAVA_VERSION_MINOR}'-linux-x64.tar.gz' | sha256sum -c - \
+      && tar -xzf ${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
       && ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} /opt/jdk \
-      && rm -rf /opt/jdk/*src.zip \
+      && rm -rf /tmp/* \
+          /opt/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
+          /opt/jdk/*src.zip \
           /opt/jdk/lib/*javafx* \
           /opt/jdk/lib/missioncontrol \
           /opt/jdk/lib/visualvm \
@@ -35,4 +46,4 @@ RUN apk --no-cache add --virtual build-dependencies curl ca-certificates tar \
           /opt/jdk/jre/lib/*jfx* \
           /opt/jdk/jre/lib/plugin.jar \
           /opt/jdk/jre/plugin \
-      && apk del build-dependencies
+      && apk del --purge build-dependencies
