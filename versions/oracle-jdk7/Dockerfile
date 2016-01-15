@@ -13,7 +13,7 @@ ENV JAVA_VERSION_MAJOR=7 \
     PATH=${PATH}:/opt/jdk/bin
 
 RUN set -ex \
-      && apk --no-cache add --virtual build-dependencies curl ca-certificates tar md5 \
+      && apk --no-cache add --virtual build-dependencies curl ca-certificates tar \
       && curl --location --silent https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk \
       && apk --update add --allow-untrusted /tmp/glibc-2.21-r2.apk \
       && mkdir /opt \
