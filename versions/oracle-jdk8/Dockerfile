@@ -1,13 +1,13 @@
-# Oracle JDK v1.8.0_66
+# Oracle JDK v1.8.0_72
 # docker run --rm pottava/java:8 java -version
 # docker run --rm pottava/java:8 env
 
 FROM alpine:3.3
 
 ENV JAVA_VERSION_MAJOR=8 \
-    JAVA_VERSION_MINOR=66 \
-    JAVA_VERSION_BUILD=17 \
-    JAVA_CHECKSUM=7e95ad5fa1c75bc65d54aaac9e9986063d0a442f39a53f77909b044cef63dc0a \
+    JAVA_VERSION_MINOR=72 \
+    JAVA_VERSION_BUILD=15 \
+    JAVA_CHECKSUM=46e7f96271043009995f39f04a9e711cdc0cc5b6a5b67910451678a3d250ec98 \
     JAVA_PACKAGE=jdk \
     JAVA_HOME=/opt/jdk \
     PATH=${PATH}:/opt/jdk/bin
