@@ -1,7 +1,7 @@
-# OpenJDK v1.8.0_92-internal
+# OpenJDK v1.8.0_111
 # docker run --rm pottava/java:8
 
-FROM alpine:3.4
+FROM alpine:3.5
 
 RUN apk --no-cache add openjdk8
 

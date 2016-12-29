@@ -1,7 +1,7 @@
-# OpenJDK v1.7.0_91
+# OpenJDK v1.7.0_121
 # docker run --rm pottava/java:7
 
-FROM alpine:3.4
+FROM alpine:3.5
 
 RUN apk --no-cache add openjdk7
 
